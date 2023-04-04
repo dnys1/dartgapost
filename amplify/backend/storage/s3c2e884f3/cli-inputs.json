@@ -1,0 +1,16 @@
+{
+  "resourceName": "s3c2e884f3",
+  "policyUUID": "c2e884f3",
+  "bucketName": "dartgapostfc30c8a175a6493dbe963558b160c1fe",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-dartgapost-dev-200558-authRole",
+      "UnauthRoleArn": "arn:aws:iam::613607431007:role/amplify-dartgapost-dev-200558-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::613607431007:role/amplify-dartgapost-dev-200558-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-dartgapost-dev-200558-deployment",
+      "UnauthRoleName": "amplify-dartgapost-dev-200558-unauthRole",
+      "StackName": "amplify-dartgapost-dev-200558",
+      "StackId": "arn:aws:cloudformation:us-west-2:613607431007:stack/amplify-dartgapost-dev-200558/a27b19d0-d295-11ed-9008-0a7efc371f09",
+      "AmplifyAppId": "dhnux14oq4xvi"
+    },
+    "categories": {
+      "auth": {
+        "dartgapost9bfba83e": {}
+      },
+      "api": {
+        "dartgapost": {}
+      },
+      "storage": {
+        "s3c2e884f3": {}
+      }
+    }
+  }
+}
