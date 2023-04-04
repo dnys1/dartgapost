@@ -30,8 +30,8 @@ class BudgetEntry extends Model {
   final String id;
   final String? _title;
   final String? _description;
-  final String? _AttachmentKey;
-  final double? _Amount;
+  final String? _attachmentKey;
+  final double? _amount;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -56,12 +56,12 @@ class BudgetEntry extends Model {
     return _description;
   }
   
-  String? get AttachmentKey {
-    return _AttachmentKey;
+  String? get attachmentKey {
+    return _attachmentKey;
   }
   
-  double? get Amount {
-    return _Amount;
+  double? get amount {
+    return _amount;
   }
   
   TemporalDateTime? get createdAt {
@@ -72,15 +72,15 @@ class BudgetEntry extends Model {
     return _updatedAt;
   }
   
-  const BudgetEntry._internal({required this.id, title, description, AttachmentKey, Amount, createdAt, updatedAt}): _title = title, _description = description, _AttachmentKey = AttachmentKey, _Amount = Amount, _createdAt = createdAt, _updatedAt = updatedAt;
+  const BudgetEntry._internal({required this.id, title, description, attachmentKey, amount, createdAt, updatedAt}): _title = title, _description = description, _attachmentKey = attachmentKey, _amount = amount, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory BudgetEntry({String? id, String? title, String? description, String? AttachmentKey, double? Amount}) {
+  factory BudgetEntry({String? id, String? title, String? description, String? attachmentKey, double? amount}) {
     return BudgetEntry._internal(
       id: id == null ? UUID.getUUID() : id,
       title: title,
       description: description,
-      AttachmentKey: AttachmentKey,
-      Amount: Amount);
+      attachmentKey: attachmentKey,
+      amount: amount);
   }
   
   bool equals(Object other) {
@@ -94,8 +94,8 @@ class BudgetEntry extends Model {
       id == other.id &&
       _title == other._title &&
       _description == other._description &&
-      _AttachmentKey == other._AttachmentKey &&
-      _Amount == other._Amount;
+      _attachmentKey == other._attachmentKey &&
+      _amount == other._amount;
   }
   
   @override
@@ -109,8 +109,8 @@ class BudgetEntry extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("title=" + "$_title" + ", ");
     buffer.write("description=" + "$_description" + ", ");
-    buffer.write("AttachmentKey=" + "$_AttachmentKey" + ", ");
-    buffer.write("Amount=" + (_Amount != null ? _Amount!.toString() : "null") + ", ");
+    buffer.write("attachmentKey=" + "$_attachmentKey" + ", ");
+    buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -118,38 +118,38 @@ class BudgetEntry extends Model {
     return buffer.toString();
   }
   
-  BudgetEntry copyWith({String? title, String? description, String? AttachmentKey, double? Amount}) {
+  BudgetEntry copyWith({String? title, String? description, String? attachmentKey, double? amount}) {
     return BudgetEntry._internal(
       id: id,
       title: title ?? this.title,
       description: description ?? this.description,
-      AttachmentKey: AttachmentKey ?? this.AttachmentKey,
-      Amount: Amount ?? this.Amount);
+      attachmentKey: attachmentKey ?? this.attachmentKey,
+      amount: amount ?? this.amount);
   }
   
   BudgetEntry.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _title = json['title'],
       _description = json['description'],
-      _AttachmentKey = json['AttachmentKey'],
-      _Amount = (json['Amount'] as num?)?.toDouble(),
+      _attachmentKey = json['attachmentKey'],
+      _amount = (json['amount'] as num?)?.toDouble(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'title': _title, 'description': _description, 'AttachmentKey': _AttachmentKey, 'Amount': _Amount, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'title': _title, 'description': _description, 'attachmentKey': _attachmentKey, 'amount': _amount, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'title': _title, 'description': _description, 'AttachmentKey': _AttachmentKey, 'Amount': _Amount, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'title': _title, 'description': _description, 'attachmentKey': _attachmentKey, 'amount': _amount, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<BudgetEntryModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<BudgetEntryModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField TITLE = QueryField(fieldName: "title");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
-  static final QueryField ATTACHMENTKEY = QueryField(fieldName: "AttachmentKey");
-  static final QueryField AMOUNT = QueryField(fieldName: "Amount");
+  static final QueryField ATTACHMENTKEY = QueryField(fieldName: "attachmentKey");
+  static final QueryField AMOUNT = QueryField(fieldName: "amount");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "BudgetEntry";
     modelSchemaDefinition.pluralName = "BudgetEntries";

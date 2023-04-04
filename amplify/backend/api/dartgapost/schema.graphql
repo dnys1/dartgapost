@@ -1,7 +1,7 @@
-type BudgetEntry @model @auth(rules: [{ allow: owner }]) {
+type BudgetEntry @model @auth(rules: [{allow: owner}]) {
   id: ID!
   title: String
   description: String
-  AttachmentKey: String
-  Amount: Float
-}
+  attachmentKey: String
+  amount: Float
+} 
