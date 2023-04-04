@@ -1,4 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dartgapost/createbudgetentry.dart';
 import 'package:flutter/material.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
@@ -15,7 +16,11 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          // Navigate to the page to create new budget entries
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Createbudgetentry()),
+          );
         },
         child: const Icon(Icons.add),
       ),
