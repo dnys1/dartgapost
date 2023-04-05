@@ -81,8 +81,14 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Description (optional)',
+                  labelText: 'Description',
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 controller: _amountController,
@@ -127,7 +133,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                       }
                       safePrint('Mutation result: ${createdBudgetEntry.title}');
                       if (!mounted) return;
-                      navigateToHomepage(currentContext);
+                      navigateToHomepage(context);
                     } else {
                       //update budgetEntry instead
                       final updateBudgetEntry = budgetEntry.copyWith(
