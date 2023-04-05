@@ -90,22 +90,26 @@ class _HomepageState extends State<Homepage> {
                       );
                     },
                     title: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Text(
                             budgetEntry?.title ?? 'Unknown title',
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         Expanded(
                           child: Text(
                             budgetEntry?.description ??
                                 'No description available',
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         Expanded(
                           child: Text(
-                            budgetEntry?.amount?.toString() ?? 'Unknown amount',
-                            textAlign: TextAlign.right,
+                            '\$ ${budgetEntry?.amount}',
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
