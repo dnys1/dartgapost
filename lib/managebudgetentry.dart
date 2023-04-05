@@ -4,17 +4,17 @@ import 'package:dartgapost/homepage.dart';
 import 'package:dartgapost/models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 
-class Createbudgetentry extends StatefulWidget {
+class Managebudgetentry extends StatefulWidget {
   final BudgetEntry? budgetEntry;
 
-  const Createbudgetentry({required this.budgetEntry, Key? key})
+  const Managebudgetentry({required this.budgetEntry, Key? key})
       : super(key: key);
 
   @override
-  State<Createbudgetentry> createState() => _CreatebudgetentryState();
+  State<Managebudgetentry> createState() => _ManagebudgetentryState();
 }
 
-class _CreatebudgetentryState extends State<Createbudgetentry> {
+class _ManagebudgetentryState extends State<Managebudgetentry> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();

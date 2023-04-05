@@ -1,6 +1,6 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:dartgapost/createbudgetentry.dart';
+import 'package:dartgapost/managebudgetentry.dart';
 import 'package:dartgapost/models/BudgetEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
@@ -39,7 +39,7 @@ class _HomepageState extends State<Homepage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const Createbudgetentry(
+                builder: (context) => const Managebudgetentry(
                       budgetEntry: null,
                     )),
           );
@@ -83,15 +83,33 @@ class _HomepageState extends State<Homepage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Createbudgetentry(
+                          builder: (context) => Managebudgetentry(
                             budgetEntry: budgetEntry,
                           ),
                         ),
                       );
                     },
-                    title: Text(budgetEntry?.title ?? 'Unknown title'),
-                    subtitle: Text(
-                        budgetEntry?.amount?.toString() ?? 'Unknown amount'),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            budgetEntry?.title ?? 'Unknown title',
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            budgetEntry?.description ??
+                                'No description available',
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            budgetEntry?.amount?.toString() ?? 'Unknown amount',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               );
