@@ -50,8 +50,6 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
   Widget build(BuildContext context) {
     final BudgetEntry? budgetEntry = widget.budgetEntry;
 
-    final currentContext = context;
-
     bool isCreateFlag = budgetEntry == null ? true : false;
 
     final String titleText =
@@ -119,7 +117,6 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                             description.isNotEmpty ? description : null,
                         amount: amount,
                       );
-                      // TODO: Save the new entry to the database
                       final request = ModelMutations.create(newEntry);
                       final response =
                           await Amplify.API.mutate(request: request).response;
@@ -143,7 +140,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                           await Amplify.API.mutate(request: request).response;
                       safePrint('Response: $response');
                       if (!mounted) return;
-                      navigateToHomepage(currentContext);
+                      navigateToHomepage(context);
                     }
                   }
                 },
