@@ -3,7 +3,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartgapost/managebudgetentry.dart';
 import 'package:dartgapost/models/BudgetEntry.dart';
 import 'package:flutter/material.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
