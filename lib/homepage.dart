@@ -30,6 +30,16 @@ class _HomepageState extends State<Homepage> {
     return <BudgetEntry?>[];
   }
 
+  double calculateTotalBudget(List<BudgetEntry?> items) {
+    double totalAmount = 0;
+
+    for (var item in items) {
+      totalAmount += item?.amount ?? 0;
+    }
+
+    return totalAmount;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,57 +75,74 @@ class _HomepageState extends State<Homepage> {
               AsyncSnapshot<List<BudgetEntry?>> snapshot) {
             if (snapshot.hasData) {
               final budgetEntries = snapshot.data!;
-              return ListView.builder(
-                itemCount: budgetEntries.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final budgetEntry = budgetEntries[index];
-                  return ListTile(
-                    onLongPress: () async {
-                      final request =
-                          ModelMutations.delete<BudgetEntry>(budgetEntry!);
-
-                      final response =
-                          await Amplify.API.mutate(request: request).response;
-                      setState(() {});
-                      safePrint('Response: $response');
-                    },
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Managebudgetentry(
-                            budgetEntry: budgetEntry,
-                          ),
-                        ),
-                      );
-                    },
-                    title: Row(
+              return Column(
+                children: [
+                  if (budgetEntries.isNotEmpty) ...[
+                    const SizedBox(height: 25.0),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Text(
-                            budgetEntry?.title ?? 'Unknown title',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            budgetEntry?.description ??
-                                'No description available',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            '\$ ${budgetEntry?.amount}',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                        const Text("Total Budget: "),
+                        Text("\$ ${calculateTotalBudget(budgetEntries)}"),
                       ],
                     ),
-                  );
-                },
+                  ],
+                  const SizedBox(height: 25.0),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: budgetEntries.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final budgetEntry = budgetEntries[index];
+                        return ListTile(
+                          onLongPress: () async {
+                            final request = ModelMutations.delete<BudgetEntry>(
+                                budgetEntry!);
+                            final response = await Amplify.API
+                                .mutate(request: request)
+                                .response;
+                            setState(() {});
+                            safePrint('Response: $response');
+                          },
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Managebudgetentry(
+                                  budgetEntry: budgetEntry,
+                                ),
+                              ),
+                            );
+                          },
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  budgetEntry?.title ?? 'Unknown title',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  budgetEntry?.description ??
+                                      'No description available',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '\$ ${budgetEntry?.amount}',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
