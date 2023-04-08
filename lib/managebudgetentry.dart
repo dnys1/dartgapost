@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartgapost/homepage.dart';
@@ -118,7 +121,6 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
       if (_isCreateFlag != null && _isCreateFlag!) {
         //upload file to S3
         final String key = await uploadToS3();
-        //Grab S3 file key
 
         // Create a new budget entry
         final newEntry = BudgetEntry(
@@ -139,6 +141,8 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
       } else {
         //update budgetEntry instead
         final String key = await uploadToS3();
+        //delete old S3 file
+        deleteFile(widget.budgetEntry!.attachmentKey!);
         final updateBudgetEntry = _budgetEntry!.copyWith(
           title: title,
           description: description.isNotEmpty ? description : null,
@@ -151,6 +155,34 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
         if (!mounted) return;
         navigateToHomepage(context);
       }
+    }
+  }
+
+  Future<void> deleteFile(String key) async {
+    try {
+      final result = await Amplify.Storage.remove(
+        key: key,
+      ).result;
+      safePrint('Removed file ${result.removedItem}');
+    } on StorageException catch (e) {
+      safePrint('Error deleting file: $e');
+    }
+  }
+
+  Future<String>? _downloadFileData() async {
+    try {
+      final result = await Amplify.Storage.getUrl(
+        key: widget.budgetEntry!.attachmentKey!,
+        options: const S3GetUrlOptions(
+          accessLevel: StorageAccessLevel.private,
+          checkObjectExistence: true,
+          expiresIn: Duration(days: 1),
+        ),
+      ).result;
+      return result.url.toString();
+    } on StorageException catch (e) {
+      safePrint(e.message);
+      rethrow;
     }
   }
 
@@ -216,13 +248,26 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                 const SizedBox(
                   height: 20,
                 ),
-                _platformFile != null
-                    ? Image.memory(
-                        _platformFile!.bytes!,
-                        height: 200,
-                        width: 200,
-                      )
-                    : Container(),
+                if (widget.budgetEntry != null && _platformFile == null) ...[
+                  FutureBuilder<String>(
+                    future: _downloadFileData(),
+                    builder: (context, AsyncSnapshot<String> snapshot) {
+                      if (snapshot.hasData) {
+                        return Image.network(
+                          snapshot.data ?? '',
+                          height: 200,
+                          width: 200,
+                        );
+                      } else if (snapshot.hasError) {
+                        return Container();
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  )
+                ] else if (_platformFile != null) ...[
+                  Image.memory(_platformFile!.bytes!, height: 200, width: 200)
+                ],
                 const SizedBox(
                   height: 20,
                 ),
