@@ -1,6 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'homepage.dart';
 import 'package:flutter/material.dart';
 //API feature imports
@@ -30,10 +31,13 @@ class _MyAppState extends State<MyApp> {
   void _configureAmplify() async {
     try {
       //authentication
-      await Amplify.addPlugin(AmplifyAuthCognito());
+      final auth = AmplifyAuthCognito();
       //API
       final api = AmplifyAPI(modelProvider: ModelProvider.instance);
-      await Amplify.addPlugin(api);
+      //Storage
+      final storage = AmplifyStorageS3();
+
+      await Amplify.addPlugins([api, auth, storage]);
 
       await Amplify.configure(amplifyconfig);
       safePrint('Successfully configured');

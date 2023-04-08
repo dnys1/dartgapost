@@ -81,8 +81,10 @@ class _HomepageState extends State<Homepage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Total Budget: "),
-                        Text("\$ ${calculateTotalBudget(budgetEntries)}"),
+                        Text(
+                          "Total Budget: \$ ${calculateTotalBudget(budgetEntries)}",
+                          style: const TextStyle(fontSize: 24.0),
+                        )
                       ],
                     ),
                   ],
