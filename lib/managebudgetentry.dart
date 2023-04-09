@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartgapost/homepage.dart';
@@ -119,9 +116,11 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
       final amount = double.parse(_amountController.text);
 
       if (_isCreateFlag != null && _isCreateFlag!) {
-        //upload file to S3
-        final String key = await uploadToS3();
-
+        //upload file to S3 if file was selected
+        String key = '';
+        if (_platformFile != null) {
+          key = await uploadToS3();
+        }
         // Create a new budget entry
         final newEntry = BudgetEntry(
             title: title,
@@ -142,7 +141,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
         //update budgetEntry instead
         final String key = await uploadToS3();
         //delete old S3 file
-        deleteFile(widget.budgetEntry!.attachmentKey!);
+        await deleteFile(widget.budgetEntry!.attachmentKey!);
         final updateBudgetEntry = _budgetEntry!.copyWith(
           title: title,
           description: description.isNotEmpty ? description : null,

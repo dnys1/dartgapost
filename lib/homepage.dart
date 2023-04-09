@@ -39,6 +39,17 @@ class _HomepageState extends State<Homepage> {
     return totalAmount;
   }
 
+  Future<void> deleteFile(String key) async {
+    try {
+      final result = await Amplify.Storage.remove(
+        key: key,
+      ).result;
+      safePrint('Removed file ${result.removedItem}');
+    } on StorageException catch (e) {
+      safePrint('Error deleting file: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +107,7 @@ class _HomepageState extends State<Homepage> {
                         final budgetEntry = budgetEntries[index];
                         return ListTile(
                           onLongPress: () async {
+                            await deleteFile(budgetEntry!.attachmentKey!);
                             final request = ModelMutations.delete<BudgetEntry>(
                                 budgetEntry!);
                             final response = await Amplify.API
