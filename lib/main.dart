@@ -4,7 +4,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'homepage.dart';
 import 'package:flutter/material.dart';
-//API feature imports
 import 'package:amplify_api/amplify_api.dart';
 import 'models/ModelProvider.dart';
 

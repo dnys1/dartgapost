@@ -36,6 +36,7 @@ dependencies:
   amplify_authenticator: ^1.0.0-0
   amplify_api: ^1.0.0-0
   amplify_storage_s3: ^1.0.0-0
+  # file picker library to select files from the device
   file_picker: ^5.2.7
 
   # The following adds the Cupertino Icons font to your application.
