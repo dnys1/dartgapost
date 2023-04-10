@@ -24,7 +24,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
 
   PlatformFile? _platformFile;
 
-  bool wasImageUpdated = false;
+  bool _wasImageUpdated = false;
 
   BudgetEntry? _budgetEntry;
 
@@ -95,7 +95,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
     if (result != null && result.files.isNotEmpty) {
       setState(() {
         _platformFile = result.files.single;
-        wasImageUpdated = true;
+        _wasImageUpdated = true;
         // final readStream = _platformFile!.readStream;
         // final bytes = <int>[];
         // await for (var chunk in readStream!) {
