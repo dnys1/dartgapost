@@ -70,6 +70,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
 
   Future<String> uploadToS3() async {
     try {
+      //upload to S3
       final result = await Amplify.Storage.uploadFile(
         localFile: AWSFile.fromData(_platformFile!.bytes!),
         key: _platformFile!.name,
@@ -88,6 +89,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
   }
 
   Future<void> pickImage() async {
+    //show the file picker to select the images
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
@@ -103,7 +105,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
 
   Future<void> submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, submit the data
+      // if the form Form is valid, submit the data
       final title = _titleController.text;
       final description = _descriptionController.text;
       final amount = double.parse(_amountController.text);
@@ -128,13 +130,16 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
           return;
         }
         safePrint('Mutation result: ${createdBudgetEntry.title}');
+        //navigate back to homepage after create executes
         if (!mounted) return;
         navigateToHomepage(context);
       } else {
         //update budgetEntry instead
+        //Upload new file
         final String key = await uploadToS3();
         //delete old S3 file
         await deleteFile(widget.budgetEntry!.attachmentKey!);
+        //update budgetEntry new file
         final updateBudgetEntry = _budgetEntry!.copyWith(
           title: title,
           description: description.isNotEmpty ? description : null,
@@ -144,6 +149,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
         final request = ModelMutations.update(updateBudgetEntry);
         final response = await Amplify.API.mutate(request: request).response;
         safePrint('Response: $response');
+        //navigate back to homepage after update executes
         if (!mounted) return;
         navigateToHomepage(context);
       }
@@ -162,6 +168,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
   }
 
   Future<String>? _downloadFileData() async {
+    //get download URL to display the budgetEntry image
     try {
       final result = await Amplify.Storage.getUrl(
         key: widget.budgetEntry!.attachmentKey!,
@@ -240,6 +247,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                 const SizedBox(
                   height: 20,
                 ),
+                //retrieve Image URL and try to display it. Show loading spinner if still loading
                 if (widget.budgetEntry != null && _platformFile == null) ...[
                   FutureBuilder<String>(
                     future: _downloadFileData(),
@@ -257,7 +265,9 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                       }
                     },
                   )
-                ] else if (_platformFile != null) ...[
+                ]
+                //when creating a new entry, show an image if it was uploaded
+                else if (_platformFile != null) ...[
                   Image.memory(_platformFile!.bytes!, height: 200, width: 200)
                 ],
                 const SizedBox(

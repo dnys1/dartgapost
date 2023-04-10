@@ -40,6 +40,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> deleteFile(String key) async {
+    //delete the S3 file
     try {
       final result = await Amplify.Storage.remove(
         key: key,
@@ -73,12 +74,14 @@ class _HomepageState extends State<Homepage> {
             icon: const Icon(Icons.logout),
             tooltip: 'logout',
             onPressed: () async {
+              //signout - the Authenticator will route you to the login form
               await Amplify.Auth.signOut();
             },
           ),
         ],
       ),
       body: Center(
+        //use FutureBuilder to list out budgetEntries for the signed in user using the API category
         child: FutureBuilder<List<BudgetEntry?>>(
           future: _queryListItems(),
           builder: (BuildContext context,
@@ -107,9 +110,10 @@ class _HomepageState extends State<Homepage> {
                         final budgetEntry = budgetEntries[index];
                         return ListTile(
                           onLongPress: () async {
+                            //delete budgetEntry
                             await deleteFile(budgetEntry!.attachmentKey!);
-                            final request = ModelMutations.delete<BudgetEntry>(
-                                budgetEntry!);
+                            final request =
+                                ModelMutations.delete<BudgetEntry>(budgetEntry);
                             final response = await Amplify.API
                                 .mutate(request: request)
                                 .response;
