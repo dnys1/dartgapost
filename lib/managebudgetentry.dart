@@ -60,7 +60,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
     super.dispose();
   }
 
-  void navigateToHomepage(BuildContext context) {
+  void _navigateToHomepage(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const Homepage()),
@@ -68,7 +68,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
     );
   }
 
-  Future<String> uploadToS3() async {
+  Future<String> _uploadToS3() async {
     try {
       //upload to S3
       final result = await Amplify.Storage.uploadFile(
@@ -88,7 +88,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
     return "";
   }
 
-  Future<void> pickImage() async {
+  Future<void> _pickImage() async {
     //show the file picker to select the images
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
@@ -114,7 +114,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
         //upload file to S3 if file was selected
         String key = '';
         if (_platformFile != null) {
-          key = await uploadToS3();
+          key = await _uploadToS3();
         }
         // Create a new budget entry
         final newEntry = BudgetEntry(
@@ -132,13 +132,13 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
         safePrint('Mutation result: ${createdBudgetEntry.title}');
         //navigate back to homepage after create executes
         if (!mounted) return;
-        navigateToHomepage(context);
+        _navigateToHomepage(context);
       } else {
         //update budgetEntry instead
         //Upload new file
-        final String key = await uploadToS3();
+        final String key = await _uploadToS3();
         //delete old S3 file
-        await deleteFile(widget.budgetEntry!.attachmentKey!);
+        await _deleteFile(widget.budgetEntry!.attachmentKey!);
         //update budgetEntry new file
         final updateBudgetEntry = _budgetEntry!.copyWith(
           title: title,
@@ -151,12 +151,12 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
         safePrint('Response: $response');
         //navigate back to homepage after update executes
         if (!mounted) return;
-        navigateToHomepage(context);
+        _navigateToHomepage(context);
       }
     }
   }
 
-  Future<void> deleteFile(String key) async {
+  Future<void> _deleteFile(String key) async {
     try {
       final result = await Amplify.Storage.remove(
         key: key,
@@ -241,7 +241,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: pickImage,
+                  onPressed: _pickImage,
                   child: const Text("upload a file"),
                 ),
                 const SizedBox(
