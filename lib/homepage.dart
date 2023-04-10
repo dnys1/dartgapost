@@ -95,6 +95,7 @@ class _HomepageState extends State<Homepage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        //show total budget from the list of all BudgetEntries
                         Text(
                           "Total Budget: \$ ${calculateTotalBudget(budgetEntries)}",
                           style: const TextStyle(fontSize: 24.0),
