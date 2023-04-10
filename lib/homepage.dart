@@ -29,7 +29,7 @@ class _HomepageState extends State<Homepage> {
     return <BudgetEntry?>[];
   }
 
-  double calculateTotalBudget(List<BudgetEntry?> items) {
+  double _calculateTotalBudget(List<BudgetEntry?> items) {
     double totalAmount = 0;
 
     for (var item in items) {
@@ -39,7 +39,7 @@ class _HomepageState extends State<Homepage> {
     return totalAmount;
   }
 
-  Future<void> deleteFile(String key) async {
+  Future<void> _deleteFile(String key) async {
     //delete the S3 file
     try {
       final result = await Amplify.Storage.remove(
@@ -49,6 +49,15 @@ class _HomepageState extends State<Homepage> {
     } on StorageException catch (e) {
       safePrint('Error deleting file: $e');
     }
+  }
+
+  //delete budget entries
+  Future<void> _deleteBudgetEntry(BudgetEntry budgetEntry) async {
+    await _deleteFile(budgetEntry.attachmentKey!);
+    final request = ModelMutations.delete<BudgetEntry>(budgetEntry);
+    final response = await Amplify.API.mutate(request: request).response;
+    setState(() {});
+    safePrint('Response: $response');
   }
 
   @override
@@ -97,7 +106,7 @@ class _HomepageState extends State<Homepage> {
                       children: [
                         //show total budget from the list of all BudgetEntries
                         Text(
-                          "Total Budget: \$ ${calculateTotalBudget(budgetEntries)}",
+                          "Total Budget: \$ ${_calculateTotalBudget(budgetEntries)}",
                           style: const TextStyle(fontSize: 24.0),
                         )
                       ],
@@ -112,14 +121,7 @@ class _HomepageState extends State<Homepage> {
                         return ListTile(
                           onLongPress: () async {
                             //delete budgetEntry
-                            await deleteFile(budgetEntry!.attachmentKey!);
-                            final request =
-                                ModelMutations.delete<BudgetEntry>(budgetEntry);
-                            final response = await Amplify.API
-                                .mutate(request: request)
-                                .response;
-                            setState(() {});
-                            safePrint('Response: $response');
+                            await _deleteBudgetEntry(budgetEntry!);
                           },
                           onTap: () {
                             Navigator.push(
