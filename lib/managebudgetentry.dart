@@ -90,18 +90,11 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
   Future<void> pickImage() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
-      // allowedExtensions: ['jpg', 'png', 'gif'],
     );
     if (result != null && result.files.isNotEmpty) {
       setState(() {
         _platformFile = result.files.single;
         _wasImageUpdated = true;
-        // final readStream = _platformFile!.readStream;
-        // final bytes = <int>[];
-        // await for (var chunk in readStream!) {
-        //   bytes.addAll(chunk);
-        // }
-        // _imageBytes = bytes as Uint8List?;
       });
     } else {
       return;
