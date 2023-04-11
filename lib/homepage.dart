@@ -1,6 +1,5 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:dartgapost/managebudgetentry.dart';
 import 'package:dartgapost/models/BudgetEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -119,11 +118,15 @@ class _HomepageState extends State<Homepage> {
                         return ListTile(
                           onLongPress: () async {
                             //delete budgetEntry
-                            await _deleteBudgetEntry(budgetEntry!);
+                            await _deleteBudgetEntry(
+                              budgetEntry!,
+                            );
                           },
                           onTap: () {
-                            context.goNamed('managebudgetentry',
-                                extra: budgetEntry);
+                            context.pushNamed(
+                              'managebudgetentry',
+                              extra: budgetEntry,
+                            );
                           },
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
