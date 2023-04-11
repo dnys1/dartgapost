@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 
-class Managebudgetentry extends StatefulWidget {
+class ManageBudgetEntry extends StatefulWidget {
   final BudgetEntry? budgetEntry;
 
-  const Managebudgetentry({required this.budgetEntry, Key? key})
+  const ManageBudgetEntry({required this.budgetEntry, Key? key})
       : super(key: key);
 
   @override
-  State<Managebudgetentry> createState() => _ManagebudgetentryState();
+  State<ManageBudgetEntry> createState() => _ManageBudgetEntryState();
 }
 
-class _ManagebudgetentryState extends State<Managebudgetentry> {
+class _ManageBudgetEntryState extends State<ManageBudgetEntry> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -74,8 +74,8 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
       final result = await Amplify.Storage.uploadFile(
         localFile: AWSFile.fromData(_platformFile!.bytes!),
         key: _platformFile!.name,
-        options:
-            const S3UploadFileOptions(accessLevel: StorageAccessLevel.private),
+        options: const StorageUploadFileOptions(
+            accessLevel: StorageAccessLevel.private),
         onProgress: (progress) {
           safePrint('Fraction completed: ${progress.fractionCompleted}');
         },

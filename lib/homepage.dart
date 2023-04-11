@@ -69,7 +69,7 @@ class _HomepageState extends State<Homepage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const Managebudgetentry(
+                builder: (context) => const ManageBudgetEntry(
                       budgetEntry: null,
                     )),
           );
@@ -111,6 +111,9 @@ class _HomepageState extends State<Homepage> {
                         )
                       ],
                     ),
+                  ] else if (budgetEntries.isEmpty) ...[
+                    const SizedBox(height: 25.0),
+                    const Text("Use the plus sign to add new budget entries")
                   ],
                   const SizedBox(height: 25.0),
                   Expanded(
@@ -127,7 +130,7 @@ class _HomepageState extends State<Homepage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Managebudgetentry(
+                                builder: (context) => ManageBudgetEntry(
                                   budgetEntry: budgetEntry,
                                 ),
                               ),
