@@ -5,6 +5,7 @@ import 'package:dartgapost/models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:go_router/go_router.dart';
 
 class ManageBudgetEntry extends StatefulWidget {
   final BudgetEntry? budgetEntry;
@@ -61,11 +62,7 @@ class _ManageBudgetEntryState extends State<ManageBudgetEntry> {
   }
 
   void _navigateToHomepage(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const Homepage()),
-      (route) => false,
-    );
+    context.replaceNamed('homepage');
   }
 
   Future<String> _uploadToS3() async {

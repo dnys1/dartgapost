@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartgapost/managebudgetentry.dart';
 import 'package:dartgapost/models/BudgetEntry.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -66,13 +67,7 @@ class _HomepageState extends State<Homepage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the page to create new budget entries
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ManageBudgetEntry(
-                      budgetEntry: null,
-                    )),
-          );
+          context.pushNamed('managebudgetentry');
         },
         child: const Icon(Icons.add),
       ),
@@ -127,14 +122,8 @@ class _HomepageState extends State<Homepage> {
                             await _deleteBudgetEntry(budgetEntry!);
                           },
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ManageBudgetEntry(
-                                  budgetEntry: budgetEntry,
-                                ),
-                              ),
-                            );
+                            context.goNamed('managebudgetentry',
+                                extra: budgetEntry);
                           },
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
