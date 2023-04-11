@@ -172,10 +172,12 @@ class _ManageBudgetEntryState extends State<ManageBudgetEntry> {
     try {
       final result = await Amplify.Storage.getUrl(
         key: widget.budgetEntry!.attachmentKey!,
-        options: const S3GetUrlOptions(
+        options: const StorageGetUrlOptions(
           accessLevel: StorageAccessLevel.private,
-          checkObjectExistence: true,
-          expiresIn: Duration(days: 1),
+          pluginOptions: S3GetUrlPluginOptions(
+            validateObjectExistence: true,
+            expiresIn: Duration(days: 1),
+          ),
         ),
       ).result;
       return result.url.toString();
