@@ -248,7 +248,7 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                   height: 20,
                 ),
                 //retrieve Image URL and try to display it. Show loading spinner if still loading
-                if (widget.budgetEntry != null && _platformFile == null) ...[
+                if (widget.budgetEntry != null && _platformFile == null)
                   FutureBuilder<String>(
                     future: _downloadFileData(),
                     builder: (context, AsyncSnapshot<String> snapshot) {
@@ -265,11 +265,10 @@ class _ManagebudgetentryState extends State<Managebudgetentry> {
                       }
                     },
                   )
-                ]
+
                 //when creating a new entry, show an image if it was uploaded
-                else if (_platformFile != null) ...[
-                  Image.memory(_platformFile!.bytes!, height: 200, width: 200)
-                ],
+                else if (_platformFile != null)
+                  Image.memory(_platformFile!.bytes!, height: 200, width: 200),
                 const SizedBox(
                   height: 20,
                 ),
