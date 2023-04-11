@@ -6,7 +6,7 @@ import 'homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'models/ModelProvider.dart';
-
+import 'package:go_router/go_router.dart';
 import 'amplifyconfiguration.dart';
 
 void main() {
@@ -26,6 +26,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _configureAmplify();
   }
+
+// GoRouter configuration
+  final _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const Homepage(),
+      ),
+    ],
+  );
 
   void _configureAmplify() async {
     try {
@@ -48,14 +58,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Authenticator(
-      child: MaterialApp(
+      child: MaterialApp.router(
+        routerConfig: _router,
         debugShowCheckedModeBanner: false,
         builder: Authenticator.builder(),
-        home: const Scaffold(
-          body: Center(
-            child: Homepage(),
-          ),
-        ),
       ),
     );
   }
