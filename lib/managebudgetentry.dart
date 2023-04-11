@@ -1,6 +1,5 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:dartgapost/homepage.dart';
 import 'package:dartgapost/models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
