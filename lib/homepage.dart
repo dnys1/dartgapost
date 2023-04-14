@@ -5,37 +5,44 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({Key? key}) : super(key: key);
+  const Homepage({super.key});
 
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
-  Future<List<BudgetEntry?>> _queryListItems() async {
+  var _budgetEntries = <BudgetEntry>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshBudgetEntries();
+  }
+
+  Future<void> _refreshBudgetEntries() async {
     try {
       final request = ModelQueries.list(BudgetEntry.classType);
       final response = await Amplify.API.query(request: request).response;
 
       final todos = response.data?.items;
-      if (todos == null) {
+      if (response.hasErrors) {
         safePrint('errors: ${response.errors}');
-        return <BudgetEntry?>[];
+        return;
       }
-      return todos;
+      setState(() {
+        _budgetEntries = todos!.whereType<BudgetEntry>().toList();
+      });
     } on ApiException catch (e) {
       safePrint('Query failed: $e');
     }
-    return <BudgetEntry?>[];
   }
 
   double _calculateTotalBudget(List<BudgetEntry?> items) {
-    double totalAmount = 0;
-
-    for (var item in items) {
+    var totalAmount = 0.0;
+    for (final item in items) {
       totalAmount += item?.amount ?? 0;
     }
-
     return totalAmount;
   }
 
@@ -53,21 +60,65 @@ class _HomepageState extends State<Homepage> {
 
   //delete budget entries
   Future<void> _deleteBudgetEntry(BudgetEntry budgetEntry) async {
-    await _deleteFile(budgetEntry.attachmentKey!);
+    final attachmentKey = budgetEntry.attachmentKey;
+    if (attachmentKey != null) {
+      await _deleteFile(attachmentKey);
+    }
     final request = ModelMutations.delete<BudgetEntry>(budgetEntry);
     final response = await Amplify.API.mutate(request: request).response;
-    setState(() {});
     safePrint('Response: $response');
+    await _refreshBudgetEntries();
+  }
+
+  Future<void> _navigateToBudgetEntry({BudgetEntry? budgetEntry}) async {
+    await context.pushNamed(
+      'managebudgetentry',
+      extra: budgetEntry,
+    );
+    // Refresh the entries when returning from the
+    // budget management screen.
+    await _refreshBudgetEntries();
+  }
+
+  Widget _buildRow({
+    required String title,
+    required String description,
+    required String amount,
+    TextStyle? style,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: style,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            description,
+            textAlign: TextAlign.center,
+            style: style,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            amount,
+            textAlign: TextAlign.center,
+            style: style,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to the page to create new budget entries
-          context.pushNamed('managebudgetentry');
-        },
+        // Navigate to the page to create new budget entries
+        onPressed: _navigateToBudgetEntry,
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
@@ -75,96 +126,78 @@ class _HomepageState extends State<Homepage> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'logout',
+            tooltip: 'Logout',
             onPressed: () async {
-              //signout - the Authenticator will route you to the login form
+              // Sign out - the Authenticator will route you to the login form
               await Amplify.Auth.signOut();
             },
           ),
         ],
       ),
       body: Center(
-        //use FutureBuilder to list out budgetEntries for the signed in user using the API category
-        child: FutureBuilder<List<BudgetEntry?>>(
-          future: _queryListItems(),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<BudgetEntry?>> snapshot) {
-            if (snapshot.hasData) {
-              final budgetEntries = snapshot.data!;
-              return Column(
-                children: [
-                  if (budgetEntries.isNotEmpty) ...[
-                    const SizedBox(height: 25.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //show total budget from the list of all BudgetEntries
-                        Text(
-                          "Total Budget: \$ ${_calculateTotalBudget(budgetEntries)}",
-                          style: const TextStyle(fontSize: 24.0),
-                        )
-                      ],
-                    ),
-                  ] else if (budgetEntries.isEmpty) ...[
-                    const SizedBox(height: 25.0),
-                    const Text("Use the plus sign to add new budget entries")
-                  ],
-                  const SizedBox(height: 25.0),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: budgetEntries.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final budgetEntry = budgetEntries[index];
-                        return ListTile(
-                          onLongPress: () async {
-                            //delete budgetEntry
-                            await _deleteBudgetEntry(
-                              budgetEntry!,
-                            );
-                          },
-                          onTap: () {
-                            context.pushNamed(
-                              'managebudgetentry',
-                              extra: budgetEntry,
-                            );
-                          },
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  budgetEntry?.title ?? 'Unknown title',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  budgetEntry?.description ??
-                                      'No description available',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '\$ ${budgetEntry?.amount}',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 25),
+          child: RefreshIndicator(
+            onRefresh: _refreshBudgetEntries,
+            child: Column(
+              children: [
+                if (_budgetEntries.isEmpty)
+                  const Text('Use the \u002b sign to add new budget entries')
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Show total budget from the list of all BudgetEntries
+                      Text(
+                        'Total Budget: \$ ${_calculateTotalBudget(_budgetEntries).toStringAsFixed(2)}',
+                        style: const TextStyle(fontSize: 24),
+                      )
+                    ],
                   ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
+                const SizedBox(height: 30),
+                _buildRow(
+                  title: 'Title',
+                  description: 'Description',
+                  amount: 'Amount',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const Divider(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _budgetEntries.length,
+                    itemBuilder: (context, index) {
+                      final budgetEntry = _budgetEntries[index];
+                      return Dismissible(
+                        key: ValueKey(budgetEntry),
+                        background: const ColoredBox(
+                          color: Colors.red,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.delete, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        onDismissed: (_) => _deleteBudgetEntry(budgetEntry),
+                        child: ListTile(
+                          onTap: () => _navigateToBudgetEntry(
+                            budgetEntry: budgetEntry,
+                          ),
+                          title: _buildRow(
+                            title: budgetEntry.title,
+                            description: budgetEntry.description ?? '',
+                            amount:
+                                '\$ ${budgetEntry.amount.toStringAsFixed(2)}',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
