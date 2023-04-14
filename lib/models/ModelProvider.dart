@@ -26,7 +26,7 @@ export 'BudgetEntry.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "f19881d7bc3055ebc1b6b60205ab7da4";
+  String version = "0e04a2e58911bd74429ca24a94ea6025";
   @override
   List<ModelSchema> modelSchemas = [BudgetEntry.schema];
   static final ModelProvider _instance = ModelProvider();

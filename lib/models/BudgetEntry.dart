@@ -48,8 +48,17 @@ class BudgetEntry extends Model {
       );
   }
   
-  String? get title {
-    return _title;
+  String get title {
+    try {
+      return _title!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   String? get description {
@@ -60,8 +69,17 @@ class BudgetEntry extends Model {
     return _attachmentKey;
   }
   
-  double? get amount {
-    return _amount;
+  double get amount {
+    try {
+      return _amount!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get createdAt {
@@ -72,9 +90,9 @@ class BudgetEntry extends Model {
     return _updatedAt;
   }
   
-  const BudgetEntry._internal({required this.id, title, description, attachmentKey, amount, createdAt, updatedAt}): _title = title, _description = description, _attachmentKey = attachmentKey, _amount = amount, _createdAt = createdAt, _updatedAt = updatedAt;
+  const BudgetEntry._internal({required this.id, required title, description, attachmentKey, required amount, createdAt, updatedAt}): _title = title, _description = description, _attachmentKey = attachmentKey, _amount = amount, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory BudgetEntry({String? id, String? title, String? description, String? attachmentKey, double? amount}) {
+  factory BudgetEntry({String? id, required String title, String? description, String? attachmentKey, required double amount}) {
     return BudgetEntry._internal(
       id: id == null ? UUID.getUUID() : id,
       title: title,
@@ -172,7 +190,7 @@ class BudgetEntry extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: BudgetEntry.TITLE,
-      isRequired: false,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
@@ -190,7 +208,7 @@ class BudgetEntry extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: BudgetEntry.AMOUNT,
-      isRequired: false,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.double)
     ));
     
